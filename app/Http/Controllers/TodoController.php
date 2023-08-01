@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
@@ -13,6 +14,9 @@ class TodoController extends Controller
     public function index()
     {
         //
+        $id = Auth::id();
+        $todos = Todo::where("user_id","=", $id);
+        return response()->json($todos);
     }
 
     /**
@@ -29,6 +33,19 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         //
+        $todo = New Todo;
+        $id = Auth::id();
+        $count = Todo::where("user_id","=", $id)->count();
+
+        $todo->name = $request->name;
+        $todo->desc = $request->desc;
+        $todo->user_id = $id;
+        $todo->level = $count+1;
+        $saved = $todo->save();
+        
+        if($saved){
+            return response()->json(["message"=> "Saved Successfully "], 201); 
+        }
     }
 
     /**

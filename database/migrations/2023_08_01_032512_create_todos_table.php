@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("desc");
-            $table->integer("status");
+            $table->string("name")->nullable(false);
+            $table->string("desc")->nullable(true);
+            $table->integer("status")->default(2);
             $table->integer("level");
+            $table->foreignId("user_id")->constrained();
             $table->timestamps();
         });
     }
