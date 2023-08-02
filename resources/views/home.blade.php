@@ -66,25 +66,41 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="todo-form">
-            <div class="mb-3">
-                <label for="name" class="form-control-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name">
-            </div>
-            <div class="mb-3">
-                <label for="desc" class="form-control-label">Description</label>
-                <textarea id="desc" name="desc" id="" class="form-control" rows="4"></textarea>
-            </div>
-          </form>
+            <form id="todo-form">
+                @csrf
+                <input type="hidden" name="id" value="{{ Auth::user()->id }}">
+                <div class="mb-3">
+                    <label for="name" class="form-control-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="mb-3">
+                    <label for="desc" class="form-control-label">Description</label>
+                    <textarea id="desc" name="desc" id="" class="form-control" rows="4"></textarea>
+                </div>
+            </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" id="click-save">Save changes</button>
         </div>
       </div>
     </div>
   </div>
-  <script>
-    
-  </script>
+
+@endsection
+
+@section('scripts')
+<script>
+    $('#click-save').click(function(){
+        alert("hello!");
+        $.ajax({
+            type: "POST",
+            url: "{{ url('api/todos') }}",
+            data: $('#todo-form').serialize(),
+            success: function (response) {
+                alert(response["message"]);
+            },
+        });
+    });
+</script>
 @endsection

@@ -11,11 +11,11 @@ class TodoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $id)
     {
         //
-        $id = Auth::id();
-        $todos = Todo::where("user_id","=", $id);
+
+        $todos = Todo::where("user_id", "=", $id)->get();
         return response()->json($todos);
     }
 
@@ -33,19 +33,20 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         //
-        $todo = New Todo;
-        $id = Auth::id();
-        $count = Todo::where("user_id","=", $id)->count();
+        $todo = new Todo;
+        $id = $request->id;
+        $count = Todo::where("user_id", "=", $id)->count();
 
         $todo->name = $request->name;
         $todo->desc = $request->desc;
         $todo->user_id = $id;
-        $todo->level = $count+1;
+        $todo->level = $count + 1;
         $saved = $todo->save();
-        
-        if($saved){
-            return response()->json(["message"=> "Saved Successfully "], 201); 
+
+        if ($saved) {
+            return response()->json(["message" => "Saved Successfully "], 201);
         }
+
     }
 
     /**
