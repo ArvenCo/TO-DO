@@ -11,11 +11,10 @@ class TodoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $id)
+    public function index()
     {
         //
-
-        $todos = Todo::where("user_id", "=", $id)->get();
+        $todos = Todo::all();
         return response()->json($todos);
     }
 

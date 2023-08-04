@@ -18,8 +18,5 @@ use App\Http\Controllers\TodoController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/todos/{id}', [TodoController::class, "index"])->name('get-todo');
-Route::post('/todos', [TodoController::class, "store"]);
-Route::middleware(['auth'])->group(function () {
-
-});
+Route::get('/todo', [TodoController::class, "index"])->name('get-todo');
+Route::post('/todo', [TodoController::class, "store"]);
