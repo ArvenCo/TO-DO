@@ -161,57 +161,57 @@
                 let content = "";
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
+                    if(element.user_id == {{ Auth::user()->id }})
+                    if (element.status > 1 ){
+                        let status = element.level == 1 ? "Ongoing" : "Pending";
+                        $("#todo-container").append(`
+                            <li class="list-group-item text-center border-0">
+                                <div class="row ">
+                                    <input type="hidden" name="id[]" value="${element.id}">
+                                    <input type="hidden" name="level[]" value="${element.level}">
+                                    <div id="todo-id" class="col-1 py-1 px-2 border-end align-middle">${element.level}</div>
+                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                        href="#desc${element.id}" role="button" aria-expanded="false"
+                                        aria-controls="collapseExample">${element.name}
+                                    </div>
+                                    <div class="col-2 py-1 px-2 border-end align-middle status">${status}</div>
+                                    <div class="col-4 py-1 px-2 row justify-content-around">
+                                        <a class="col-10 btn btn-danger" data-id="${element.id}">Delete</a>
+                                    </div>
+                                </div>
+                                <div class="collapse " id="desc${element.id}">
+                                    <div class="card  card-body border border-0">
+                                        ${element.desc}
+                                    </div>
+                                </div>
+                            </li>
                     
-                  if (element.status > 1 ){
-                    let status = element.level == 1 ? "Ongoing" : "Pending";
-                    $("#todo-container").append(`
-                        <li class="list-group-item text-center border-0">
-                            <div class="row ">
+                    `);
+                    }else{
+                        $('#done-container').append(`
+                            <li class="list-group-item text-center border-0">
                                 <input type="hidden" name="id[]" value="${element.id}">
                                 <input type="hidden" name="level[]" value="${element.level}">
-                                <div id="todo-id" class="col-1 py-1 px-2 border-end align-middle">${element.level}</div>
-                                <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
-                                    href="#desc${element.id}" role="button" aria-expanded="false"
-                                    aria-controls="collapseExample">${element.name}
-                                </div>
-                                <div class="col-2 py-1 px-2 border-end align-middle status">${status}</div>
-                                <div class="col-4 py-1 px-2 row justify-content-around">
-                                    <a class="col-10 btn btn-danger" data-id="${element.id}">Delete</a>
-                                </div>
-                            </div>
-                            <div class="collapse " id="desc${element.id}">
-                                <div class="card  card-body border border-0">
-                                    ${element.desc}
-                                </div>
-                            </div>
-                        </li>
-                  
-                  `);
-                  }else{
-                    $('#done-container').append(`
-                        <li class="list-group-item text-center border-0">
-                            <input type="hidden" name="id[]" value="${element.id}">
-                            <input type="hidden" name="level[]" value="${element.level}">
-                            <div class="row ">
-                                <div class="col-1 py-1 px-2 border-end align-middle">1</div>
-                                <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
-                                    href="#desc${element.id}" role="button" aria-expanded="false"
-                                    aria-controls="collapseExample">${element.name}
-                                </div>
-                                <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
-                                    Done
-                                </div>
+                                <div class="row ">
+                                    <div class="col-1 py-1 px-2 border-end align-middle">1</div>
+                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                        href="#desc${element.id}" role="button" aria-expanded="false"
+                                        aria-controls="collapseExample">${element.name}
+                                    </div>
+                                    <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
+                                        Done
+                                    </div>
 
-                            </div>
-                            <div class="collapse " id="desc${element.id}">
-                                <div class="card  card-body border border-0">
-                                    ${element.desc}
                                 </div>
-                            </div>
-                        </li>
-                    `);
+                                <div class="collapse " id="desc${element.id}">
+                                    <div class="card  card-body border border-0">
+                                        ${element.desc}
+                                    </div>
+                                </div>
+                            </li>
+                        `);
                     
-                  }
+                    }
                   
 
                 }
