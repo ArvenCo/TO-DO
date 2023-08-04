@@ -34,29 +34,31 @@
                                 </div>
                             </li>
                         </ul>
-                        <ul id="todo-container" class=" list-group column border rounded-top-0">
-                            <li class="list-group-item text-center border-0">
-                                <div class="row ">
-                                    <div class="col-1 py-1 px-2 border-end align-middle">1</div>
-                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
-                                        href="#desc1" role="button" aria-expanded="false"
-                                        aria-controls="collapseExample">Sample Name
+                        <form id="todo-container-form">
+                            <ul id="todo-container" class=" list-group column border rounded-top-0">
+                                <!-- <li class="list-group-item text-center border-0">
+                                    <div class="row ">
+                                        <div class="col-1 py-1 px-2 border-end align-middle">1</div>
+                                        <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                            href="#desc1" role="button" aria-expanded="false"
+                                            aria-controls="collapseExample">Sample Name
+                                        </div>
+                                        <div class="col-2 py-1 px-2 border-end align-middle">OK</div>
+                                        <div class="col-4 py-1 px-2 row justify-content-around">
+                                            <button class="col-10 btn btn-danger">Delete</button>
+                                        </div>
                                     </div>
-                                    <div class="col-2 py-1 px-2 border-end align-middle">OK</div>
-                                    <div class="col-4 py-1 px-2 row justify-content-around">
-                                        <button class="col-10 btn btn-danger">Delete</button>
+                                    <div class="collapse " id="desc1">
+                                        <div class="card  card-body border border-0">
+                                            Some placeholder content for the collapse component. This panel is hidden by
+                                            default but revealed when the user
+                                            activates the relevant trigger.
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="collapse " id="desc1">
-                                    <div class="card  card-body border border-0">
-                                        Some placeholder content for the collapse component. This panel is hidden by
-                                        default but revealed when the user
-                                        activates the relevant trigger.
-                                    </div>
-                                </div>
-                            </li>
+                                </li> -->
 
-                        </ul>
+                            </ul>
+                        </form>
                     </div>
                     <div class="col-6 ">
                         <h4 class="m-auto py-2 bg-secondary bg-opacity-25 rounded-top-2">DONE</h4>
@@ -72,22 +74,28 @@
                             </li>
                         </ul>
                         <ul id="done-container" class="  list-group column border rounded-top-0">
-                            <li class="list-group-item text-center border-0">
+                            <!-- <li class="list-group-item text-center border-0">
                                 <div class="row ">
                                     <div class="col-1 py-1 px-2 border-end align-middle">1</div>
-                                    <div class=" col py-1 px-2 border-end align-middle">Sample Name
+                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                        href="#desc1" role="button" aria-expanded="false"
+                                        aria-controls="collapseExample">Sample Name
                                     </div>
                                     <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
                                         Done
                                     </div>
 
                                 </div>
-                            </li>
+                                <div class="collapse " id="desc1">
+                                    <div class="card  card-body border border-0">
+                                        Some placeholder content for the collapse component. This panel is hidden by
+                                        default but revealed when the user
+                                        activates the relevant trigger.
+                                    </div>
+                                </div>
+                            </li> -->
                         </ul>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
@@ -139,13 +147,71 @@
             },
         });
     });
+
+    
+    
     $(document).ready(function () {
-        console.log("hello");
         $.ajax({
             type: "GET",
             url: "{{ url('api/todo') }}",
             success: function (response) {
-                console.log("hello");
+                let data = response;
+                
+                let content = "";
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    
+                  if (element.status > 1 ){
+                    let status = element.level == 1 ? "Working" : "Next";
+                    $("#todo-container").append(`
+                        <li class="list-group-item text-center border-0">
+                            <div class="row ">
+                                <input type="hidden" name="id[]" value="${element.id}">
+                                <input type="hidden" name="level[]" value="${element.level}">
+                                <div id="todo-id" class="col-1 py-1 px-2 border-end align-middle">${element.level}</div>
+                                <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                    href="#desc${element.id}" role="button" aria-expanded="false"
+                                    aria-controls="collapseExample">${element.name}
+                                </div>
+                                <div class="col-2 py-1 px-2 border-end align-middle">${status}</div>
+                                <div class="col-4 py-1 px-2 row justify-content-around">
+                                    <button class="col-10 btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                            <div class="collapse " id="desc${element.id}">
+                                <div class="card  card-body border border-0">
+                                    ${element.desc}
+                                </div>
+                            </div>
+                        </li>
+                  
+                  `);
+                  }else{
+                    $('#done-container').append(`
+                        <li class="list-group-item text-center border-0">
+                                <div class="row ">
+                                    <div class="col-1 py-1 px-2 border-end align-middle">1</div>
+                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                        href="#desc${element.id}" role="button" aria-expanded="false"
+                                        aria-controls="collapseExample">${element.name}
+                                    </div>
+                                    <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
+                                        Done
+                                    </div>
+
+                                </div>
+                                <div class="collapse " id="desc${element.id}">
+                                    <div class="card  card-body border border-0">
+                                        ${element.desc}
+                                    </div>
+                                </div>
+                            </li>
+                    `);
+                  }
+                  
+
+                }
+                
             }
         });
     });

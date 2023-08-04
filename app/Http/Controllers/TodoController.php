@@ -14,8 +14,8 @@ class TodoController extends Controller
     public function index()
     {
         //
-        $todos = Todo::all();
-        return response()->json($todos);
+        $todo = Todo::orderBy('level', 'asc')->get();
+        return response()->json($todo);
     }
 
     /**
@@ -64,21 +64,33 @@ class TodoController extends Controller
         //
 
 
+
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request)
     {
         //
-        $id = $request->id;
+
         $type = $request->type;
         switch ($type) {
             case 'sort':
                 # code...
+                $id = $request->input('id');
+                $level = $request->input('level');
+                // dd([$id, $level]);
+                foreach ($id as $key => $value) {
+                    # code...
 
-                break;
+                    $todo = Todo::find($value);
+                    $todo->level = $level[$key];
+                    $todo->save();
+                }
+                return response()->json(["message" => "Sort Successful"]);
+
 
             default:
                 # code...
