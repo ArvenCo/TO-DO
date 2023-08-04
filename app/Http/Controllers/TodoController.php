@@ -14,9 +14,8 @@ class TodoController extends Controller
     public function index()
     {
         //
-        $id = Auth::id();
-        $todos = Todo::where("user_id","=", $id);
-        return response()->json($todos);
+        $todo = Todo::orderBy('level', 'asc')->get();
+        return response()->json($todo);
     }
 
     /**
@@ -33,19 +32,20 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         //
-        $todo = New Todo;
-        $id = Auth::id();
-        $count = Todo::where("user_id","=", $id)->count();
+        $todo = new Todo;
+        $id = $request->id;
+        $count = Todo::where("user_id", "=", $id)->count();
 
         $todo->name = $request->name;
         $todo->desc = $request->desc;
         $todo->user_id = $id;
-        $todo->level = $count+1;
+        $todo->level = $count + 1;
         $saved = $todo->save();
-        
-        if($saved){
-            return response()->json(["message"=> "Saved Successfully "], 201); 
+
+        if ($saved) {
+            return response()->json(["message" => "Saved Successfully "], 201);
         }
+
     }
 
     /**
@@ -62,21 +62,68 @@ class TodoController extends Controller
     public function edit(Todo $todo)
     {
         //
+
+
+
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request)
     {
         //
+
+        $type = $request->type;
+        switch ($type) {
+            case 'sort':
+                # code...
+                $id = $request->input('id');
+                $level = $request->input('level');
+                // dd([$id, $level]);
+                foreach ($id as $key => $value) {
+                    # code...
+
+                    $todo = Todo::find($value);
+                    $todo->level = $level[$key];
+                    $todo->save();
+                }
+                return response()->json(["message" => "Sort Successful"]);
+
+            case 'done':
+                $id = $request->id;
+                $todo = Todo::find($id);
+                $todo->status = 1;
+                $todo->level = 0;
+                $todo->save();
+                break;
+
+            case 'undone':
+                $id = $request->id;
+                $todo = Todo::find($id);
+                $todo->status = 2;
+                $todo->level = 1;
+                $todo->save();
+                break;
+            default:
+                # code...
+
+
+                break;
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Todo $todo)
+    public function destroy(Request $request)
     {
         //
+        $todo = Todo::find($request->id);
+        $todo->delete();
+
+
     }
 }
