@@ -91,9 +91,25 @@ class TodoController extends Controller
                 }
                 return response()->json(["message" => "Sort Successful"]);
 
+            case 'done':
+                $id = $request->id;
+                $todo = Todo::find($id);
+                $todo->status = 1;
+                $todo->level = 0;
+                $todo->save();
+                break;
 
+            case 'undone':
+                $id = $request->id;
+                $todo = Todo::find($id);
+                $todo->status = 2;
+                $todo->level = 1;
+                $todo->save();
+                break;
             default:
                 # code...
+
+
                 break;
         }
 

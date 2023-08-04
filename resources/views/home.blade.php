@@ -74,6 +74,7 @@
                             </li>
                         </ul>
                         <ul id="done-container" class="  list-group column border rounded-top-0">
+                            
                             <!-- <li class="list-group-item text-center border-0">
                                 <div class="row ">
                                     <div class="col-1 py-1 px-2 border-end align-middle">1</div>
@@ -150,8 +151,8 @@
 
     
     
-    $(document).ready(function () {
-        $.ajax({
+    $(document).ready( async function () {
+        await $.ajax({
             type: "GET",
             url: "{{ url('api/todo') }}",
             success: function (response) {
@@ -162,7 +163,7 @@
                     const element = data[index];
                     
                   if (element.status > 1 ){
-                    let status = element.level == 1 ? "Working" : "Next";
+                    let status = element.level == 1 ? "Ongoing" : "Pending";
                     $("#todo-container").append(`
                         <li class="list-group-item text-center border-0">
                             <div class="row ">
@@ -173,9 +174,9 @@
                                     href="#desc${element.id}" role="button" aria-expanded="false"
                                     aria-controls="collapseExample">${element.name}
                                 </div>
-                                <div class="col-2 py-1 px-2 border-end align-middle">${status}</div>
+                                <div class="col-2 py-1 px-2 border-end align-middle status">${status}</div>
                                 <div class="col-4 py-1 px-2 row justify-content-around">
-                                    <button class="col-10 btn btn-danger">Delete</button>
+                                    <a class="col-10 btn btn-danger" data-id="${element.id}">Delete</a>
                                 </div>
                             </div>
                             <div class="collapse " id="desc${element.id}">
@@ -189,31 +190,57 @@
                   }else{
                     $('#done-container').append(`
                         <li class="list-group-item text-center border-0">
-                                <div class="row ">
-                                    <div class="col-1 py-1 px-2 border-end align-middle">1</div>
-                                    <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
-                                        href="#desc${element.id}" role="button" aria-expanded="false"
-                                        aria-controls="collapseExample">${element.name}
-                                    </div>
-                                    <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
-                                        Done
-                                    </div>
+                            <input type="hidden" name="id[]" value="${element.id}">
+                            <input type="hidden" name="level[]" value="${element.level}">
+                            <div class="row ">
+                                <div class="col-1 py-1 px-2 border-end align-middle">1</div>
+                                <div class=" col py-1 px-2 border-end align-middle" data-bs-toggle="collapse"
+                                    href="#desc${element.id}" role="button" aria-expanded="false"
+                                    aria-controls="collapseExample">${element.name}
+                                </div>
+                                <div class="col-2 py-1 px-2 border-end align-middle bg-success text-light rounded">
+                                    Done
+                                </div>
 
+                            </div>
+                            <div class="collapse " id="desc${element.id}">
+                                <div class="card  card-body border border-0">
+                                    ${element.desc}
                                 </div>
-                                <div class="collapse " id="desc${element.id}">
-                                    <div class="card  card-body border border-0">
-                                        ${element.desc}
-                                    </div>
-                                </div>
-                            </li>
+                            </div>
+                        </li>
                     `);
+                    
                   }
                   
 
                 }
                 
+                if($("#done-container>li").length == 0){
+                    $("#done-container").html(`
+                        <li class="list-group-item text-center border-0"> Drop Here</li>
+                    `)
+                }
+                
             }
         });
+        await $('.btn-danger').click(function(){
+            let id = $(this).data('id');
+            
+            $.ajax({
+                type: "DELETE",
+                url: "{{url('api/todo')}}",
+                data: {id},
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        })
+        await  updateLevel();
+        
+        
     });
+
+    
 </script>
 @endsection
