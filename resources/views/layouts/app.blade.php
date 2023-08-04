@@ -75,7 +75,8 @@
         <main class="py-4">
             @yield('content')
         </main>
-        <script src="{{ asset('jquery.js') }}"></script>
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui.js') }}"></script>
         @yield('scripts')
         
     </div>

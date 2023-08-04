@@ -62,6 +62,8 @@ class TodoController extends Controller
     public function edit(Todo $todo)
     {
         //
+
+
     }
 
     /**
@@ -70,6 +72,19 @@ class TodoController extends Controller
     public function update(Request $request, Todo $todo)
     {
         //
+        $id = $request->id;
+        $type = $request->type;
+        switch ($type) {
+            case 'sort':
+                # code...
+
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
     }
 
     /**
